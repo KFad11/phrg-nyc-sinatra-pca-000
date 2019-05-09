@@ -30,4 +30,28 @@ class FiguresController < ApplicationController
 
     figure.save
   end
+
+  get "/figures" do
+    @figures = Figure.all
+    erb :'figures/index'
+  end
+
+  get "/figures/:id" do # view single figure
+    @figure = Figure.find(params[:id])
+    erb :'figures/show'
+  end
+
+  get "/figures/:id/edit" do # view form to edit single figure
+    @figure = Figure.find(params[:id])
+    erb :'figures/edit'
+  end
+
+  patch "/figures/:id" do # edit single figure
+    @figure = Figure.find(params[:id])
+    @figure.name = params[:figure][:name]
+    @landmark = Landmark.new(name: params[:figure][:landmark])
+    @figure.landmarks << @landmark
+    @figure.save
+    redirect to "/figures/#{@figure.id}"
+  end
 end
